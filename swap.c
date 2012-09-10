@@ -5,7 +5,7 @@
 
 #define PAGE_SIZE 4096
 #define PAGE_MASK (~(PAGE_SIZE-1))
-#define MB2B(_x) (_x * 1024UL * 1024UL)
+#define MB2B(_x) ((_x) * 1024 * 1024)
 
 static void usage(const char **argv)
 {
@@ -15,7 +15,8 @@ static void usage(const char **argv)
 static void do_scan(unsigned int amount)
 {
 	volatile char *start, *ptr, *end;
-	unsigned long size = MB2B(amount & PAGE_MASK);
+	unsigned long size = MB2B(amount) & PAGE_MASK;
+	unsigned char i = 0;
 
 	start = ptr = malloc(size);
 	if (!ptr) {
@@ -25,10 +26,9 @@ static void do_scan(unsigned int amount)
 
 	end = start + size;
 	while (1) {
-		*ptr = 42;
+		*ptr = i++;
 		ptr += PAGE_SIZE;
 		if (ptr == end) {
-			printf(".");
 			fflush(stdout);
 			ptr = start;
 		}
@@ -44,7 +44,6 @@ int main(int argc, const char *argv[])
 		return EXIT_FAILURE;
 	} else if (argc == 2) {
 		amount = atoi(argv[1]);
-
 	}
 
 	if (amount >= 2048) {
@@ -53,6 +52,5 @@ int main(int argc, const char *argv[])
 	}
 
 	do_scan(amount);
-
 	return 0;
 }
