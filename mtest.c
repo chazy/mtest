@@ -14,9 +14,9 @@ static void usage(const char **argv)
 
 static void do_scan(unsigned int amount)
 {
-	volatile char *start, *ptr, *end;
+	volatile unsigned long *start, *ptr, *end;
 	unsigned long size = MB2B(amount) & PAGE_MASK;
-	unsigned char i = 0;
+	unsigned long offset = 0;
 
 	start = ptr = malloc(size);
 	if (!ptr) {
@@ -25,13 +25,31 @@ static void do_scan(unsigned int amount)
 	}
 
 	end = start + size;
+
+	for (ptr = start; ptr < end; ptr++) {
+		*ptr = (unsigned long)ptr;
+	}
+
+	ptr = start;
 	while (1) {
-		*ptr = i++;
-		ptr += PAGE_SIZE;
-		if (ptr == end) {
-			fflush(stdout);
-			ptr = start;
+		if (*ptr != (unsigned long)ptr) {
+			printf("Corrupted memory found at %p, should be "
+			       "%p, was %#08lx\n", ptr, ptr, *ptr);
+			printf("Page dump:\n\n");
+
+			unsigned long *ps, *pptr, *pend;
+			ps = (unsigned long *)((unsigned long)ptr & PAGE_MASK);
+			pend = ps + PAGE_SIZE/sizeof(unsigned long);
+			for (pptr = ps; pptr < pend; pptr++) {
+				printf("%0lx:\t%#08lx %#08lx %#08lx %#08lx\n",
+				       pptr - ps, pptr[0], pptr[1],
+				       pptr[2], pptr[3]);
+				pptr += 4;
+			}
 		}
+		ptr++;
+		if (ptr == end)
+			ptr = start;
 	}
 }
 
@@ -44,11 +62,6 @@ int main(int argc, const char *argv[])
 		return EXIT_FAILURE;
 	} else if (argc == 2) {
 		amount = atoi(argv[1]);
-	}
-
-	if (amount >= 2048) {
-		fprintf(stderr, "value too large, max 2048 MB\n");
-		return EXIT_FAILURE;
 	}
 
 	do_scan(amount);

@@ -20,15 +20,15 @@ AS=$(CROSS_COMPILE)as
 LD=$(CROSS_COMPILE)ld
 
 
-all: swap
+all: mtest
 
-OBJS	= swap.o
+OBJS	= mtest.o
 
-swap: $(OBJS)
+mtest: $(OBJS)
 	$(GCC) -o $@ $<
 
 %.o: %.c
 	$(CC) -g -c -o $@ $<
 
 clean distclean:
-	rm -f swap swap.o
+	rm -f mtest mtest.o
