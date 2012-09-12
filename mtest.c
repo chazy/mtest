@@ -24,7 +24,7 @@ static void do_scan(unsigned int amount)
 		exit(EXIT_FAILURE);
 	}
 
-	end = start + size;
+	end = start + size/sizeof(unsigned long);
 
 	for (ptr = start; ptr < end; ptr++) {
 		*ptr = (unsigned long)ptr;
