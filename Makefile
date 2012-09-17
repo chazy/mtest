@@ -28,7 +28,7 @@ mtest: $(OBJS)
 	$(GCC) -o $@ $<
 
 %.o: %.c
-	$(CC) -g -c -o $@ $<
+	$(CC) -O3 -g -c -o $@ $<
 
 clean distclean:
 	rm -f mtest mtest.o
