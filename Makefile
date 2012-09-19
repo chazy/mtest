@@ -20,15 +20,25 @@ AS=$(CROSS_COMPILE)as
 LD=$(CROSS_COMPILE)ld
 
 
-all: mtest
+all: mtest bigass
 
-OBJS	= mtest.o
+bigass_loop.S: generate.py
+	./generate.py > bigass_loop.S
 
-mtest: $(OBJS)
-	$(GCC) -o $@ $<
+bigass_loop.o: bigass_loop.S
+	$(AS) -o $@ $<
+
+BIGASS_OBJS = bigass_loop.o bigass.o
+
+bigass: $(BIGASS_OBJS)
+	$(GCC) -o $@ $^
+
+MTEST_OBJS	= mtest.o
+mtest: $(MTEST_OBJS)
+	$(GCC) -o $@ $^
 
 %.o: %.c
 	$(CC) -O3 -g -c -o $@ $<
 
 clean distclean:
-	rm -f mtest mtest.o
+	rm -f mtest mtest.o bigass.o bigass bigass_loop.o bigass_loop.S

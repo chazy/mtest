@@ -1,3 +1,7 @@
 swap
 mtest
 *.o
+bigass
+bigass_loop.o
+bigass_loop.S
+
