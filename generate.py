@@ -3,6 +3,10 @@
 start_block ="""
 .globl bigass_function
     bigass_function:
+
+    mov     r2, pc
+    nop
+    nop
 """
 
 rept_block = """    mov     r0, pc
@@ -11,7 +15,6 @@ rept_block = """    mov     r0, pc
     bxne    lr
 """
 end_block ="""
-    ldr     r2, =bigass_function
     mov     pc, r2
 """
 
