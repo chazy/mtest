@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 start_block ="""
+.text
+.arm
 .globl bigass_function
     bigass_function:
 

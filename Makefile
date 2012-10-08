@@ -28,6 +28,9 @@ bigass_loop.S: generate.py
 bigass_loop.o: bigass_loop.S
 	$(AS) -o $@ $<
 
+bigass.o: bigass.c
+	$(CC) -g -c -marm -o $@ $<
+
 BIGASS_OBJS = bigass_loop.o bigass.o
 
 bigass: $(BIGASS_OBJS)
