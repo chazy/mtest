@@ -38,7 +38,7 @@ bigass: $(BIGASS_OBJS)
 
 MTEST_OBJS	= mtest.o
 mtest: $(MTEST_OBJS)
-	$(GCC) -o $@ $^
+	$(GCC) -static -o $@ $^
 
 %.o: %.c
 	$(CC) -O3 -g -c -o $@ $<
