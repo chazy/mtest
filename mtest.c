@@ -42,13 +42,14 @@ static void do_scan(unsigned int amount)
 			unsigned long *ps, *pptr, *pend;
 			ps = (unsigned long *)((unsigned long)ptr & PAGE_MASK);
 			pend = ps + PAGE_SIZE/sizeof(unsigned long);
-			for (pptr = ps; pptr < pend; pptr++) {
+			for (pptr = ps; pptr < pend;) {
 				printf("%0lx:\t%#08lx %#08lx %#08lx %#08lx\n",
-				       (unsigned long)(pptr - ps),
+				       (unsigned long)((pptr - ps) * 4),
 				       pptr[0], pptr[1],
 				       pptr[2], pptr[3]);
 				pptr += 4;
 			}
+			ptr = pptr - 1;
 		}
 		ptr++;
 		if (ptr == end)
